@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2018 DGFiP - Tous droits réservés
+ */
 package jmarzin.cdif;
 
 import java.awt.BorderLayout;
@@ -9,19 +12,46 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.*;
 
+/**
+ * Class FenetreTimer gère la fenêtre d'échange avec l'utilisateur.
+ */
 @SuppressWarnings("serial")
 public class FenetreTimer extends JFrame implements ActionListener
 {
+    
+    /** visu lance. */
     private boolean visuLance;
+    
+    /** message. */
     private JLabel message;
+    
+    /** texte. */
     private JLabel texte;
+    
+    /** code. */
     private JTextField code;
+    
+    /** timer. */
     private Timer timer;
+    
+    /** bouton. */
     private JButton bouton;
+    
+    /** parametres. */
     private Parametres parametres;
+    
+    /** lecteur codes. */
     private LecteurCodes lecteurCodes;
+    
+    /** appli visu. */
     private AppliVisu appliVisu;
     
+    /**
+     * methode Duree : fournit la durée restante en clair.
+     *
+     * @param delai : le délai en millisecondes
+     * @return string
+     */
     private String duree(int delai)
     {
         String chaine = "Il vous reste ";
@@ -37,6 +67,11 @@ public class FenetreTimer extends JFrame implements ActionListener
         }
         return chaine;
     }
+    
+    /**
+     * methode Fin : fin du programme, soit après fermeture de la fenêtre utilisateur,
+     * soit à la fin du temps alloué.
+     */
     private void fin()
     {
         if (visuLance)
@@ -46,6 +81,11 @@ public class FenetreTimer extends JFrame implements ActionListener
         System.exit(0);
     }
     
+    /**
+     * methode Traite : vérifie le code fourni, lance l'application
+     * de consultation du cadastre s'il est valide et lance le compte
+     * à rebours du temps alloué.
+     */
     private void traite()
     {
         if (!lecteurCodes.consomme(code.getText()))
@@ -66,10 +106,17 @@ public class FenetreTimer extends JFrame implements ActionListener
         timer.start(); 
     }
 
+    /**
+     * methode Decompte : réduit le temps alloué d'une seconde et déclenche la fin
+     * du traitement si le temps est écoulé. Si l'application de consultation a été
+     * fermée, l'application est fermée. Le temps restant est affiché à l'utilisateur,
+     * avec une signalétique particulière paramétrable quand l'échéance approche (texte
+     * en rouge et émission d'un bip).
+     */
     private void decompte()
     {
-        parametres.setDelai(parametres.getDelai() - 1000);
-        if(parametres.getDelai() <= 0)
+        parametres.setDelaiArret(parametres.getDelaiArret() - 1000);
+        if(parametres.getDelaiArret() <= 0)
         {
             this.dispose();
             fin();
@@ -78,14 +125,23 @@ public class FenetreTimer extends JFrame implements ActionListener
         {
             System.exit(0);
         }
-        else if(parametres.getDelai() <= 60000)
+        if(parametres.rouge())
         {
             this.message.setForeground(Color.red);
+        }
+        if(parametres.bip())
+        {
             java.awt.Toolkit.getDefaultToolkit().beep();
         }
-        this.message.setText(duree(parametres.getDelai()));
+        this.message.setText(duree(parametres.getDelaiArret()));
     }
         
+    /**
+     * Instanciation de fenetre timer.
+     *
+     * @param parametres : les paramètres de l'application
+     * @param lecteurCodes : les codes disponibles lus dans le fichier des codes
+     */
     public FenetreTimer(Parametres parametres, LecteurCodes lecteurCodes)
     {
         this.parametres = parametres;
@@ -117,6 +173,12 @@ public class FenetreTimer extends JFrame implements ActionListener
         this.setVisible(true);
     }
 
+    /** 
+     * Si c'est le bouton qui active l'action, le traitement est lancé. Sinon, c'est
+     * à dire si c'est le timer, on décompte une seconde.
+     * {@inheritDoc}
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
     public void actionPerformed(ActionEvent e)
     {
         if(e.getSource().equals(bouton))

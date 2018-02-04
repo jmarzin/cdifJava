@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2018 DGFiP - Tous droits réservés
+ */
 package jmarzin.cdif;
 
 import java.io.BufferedReader;
@@ -8,10 +11,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.channels.FileChannel;
 
-import javax.swing.JOptionPane;
-
+/**
+ * Class AppliVisu : représente l'application de consultation du cadastre.
+ */
 public class AppliVisu
 {
+    
+    /**
+     * methode Ferme : tue la tâche de consultation du cadastre.
+     */
     public void ferme()
     {
         try
@@ -21,6 +29,12 @@ public class AppliVisu
         catch (IOException e){}        
     }
     
+    /**
+     * methode Est fermee : indique si l'application de consultation du cadastre
+     * est ouverte.
+     *
+     * @return true, si c'est vrai
+     */
     public boolean estFermee()
     {
         String line = "";
@@ -39,6 +53,13 @@ public class AppliVisu
         return line.contains(": aucune t");
     }
     
+    /**
+     * Instanciation de appli visu. La création de l'objet copie de fichier d'identification
+     * dans le répertoire d'accueil de l'utilisateur et lance l'application de consultation.
+     *
+     * @param parametres : paramètres de la consultation tels qu'ils figurent
+     * dans le fichier visuDGFiP.params
+     */
     AppliVisu(Parametres parametres)
     {
         FileChannel sourceChannel = null;

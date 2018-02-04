@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2018 DGFiP - Tous droits réservés
+ */
 package jmarzin.cdif;
 
 import java.io.BufferedReader;
@@ -10,12 +13,26 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
+/**
+ * Class LecteurCodes : gère les codes de session.
+ */
 public class LecteurCodes
 {
+    
+    /** fichier codes. */
     private String fichierCodes;
+    
+    /** liste codes. */
     private List<String> listeCodes = new ArrayList<String>();
+    
+    /**
+     * methode Consomme : vérifie si le code figure parmi les cent premiers codes
+     * du fichier des codes. Si le code est trouvé, il est supprimé de la liste 
+     * et du fichier des codes.
+     *
+     * @param code : code fourni par l'utilisateur
+     * @return true, si le code est valide
+     */
     public boolean consomme(String code)
     {
         int index = listeCodes.indexOf(code);
@@ -42,6 +59,12 @@ public class LecteurCodes
             return false;
         }
     }
+    
+    /**
+     * Instanciation de lecteur codes.
+     *
+     * @param fichierCodes : nom du fichier des codes
+     */
     LecteurCodes(String fichierCodes)
     {
         this.fichierCodes = fichierCodes;
